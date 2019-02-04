@@ -20,8 +20,10 @@
 # #---Basic Definitions---# #
 # Needed for i3-gaps
 for_window [class="^.*"] border pixel 2
-gaps inner 15
-gaps outer 0
+set $inner 15
+set $outer 0
+gaps inner $inner
+gaps outer $outer
 set $term --no-startup-id $TERMINAL
 set $mod Mod4
 set $stoprec --no-startup-id dmenurecord kill
@@ -92,7 +94,7 @@ client.background $black
 bar {
 	font pango:mono 10
 	colors {
-			background $darkblack
+			background #00000099
 			statusline $darkwhite
 			separator $cyan
 			focused_workspace  $blue $darkblue $darkblack
@@ -101,20 +103,24 @@ bar {
         		urgent_workspace   $darkblack $darkblack $white
 		}
 	status_command i3blocks
+	i3bar_command i3bar -t
 	position top
 	mode dock
 	modifier None
+	tray_output none
 }
 
 # #---Basic Bindings---# #
 bindsym $mod+Return 		exec $term
 bindsym $mod+Shift+Return	exec --no-startup-id samedir
 
-bindsym $mod+Shift+space 	floating toggle
-bindsym $mod+space		focus mode_toggle
+bindsym $mod+Shift+space 	exec --no-startup-id roli --show run # floating toggle
+bindsym $mod+space		exec --no-startup-id rofi --show window # focus mode_toggle
 
 bindsym $mod+Escape		workspace prev
 bindsym $mod+Shift+Escape 	exec --no-startup-id prompt "Exit i3?" "i3-msg exit"
+
+bindsym $mod+Ctrl+p		exec --no-startup-id unsplash
 
 # bindsym $mod+BackSpace
 bindsym $mod+Shift+BackSpace	exec --no-startup-id prompt "Reboot computer?" "$reboot"
@@ -143,7 +149,7 @@ bindsym $mod+r 			exec $term -e $FILE
 bindsym $mod+Shift+r		exec --no-startup-id winresize
 
 bindsym $mod+t			split toggle
-bindsym $mod+Shift+t		gaps inner current set 15; gaps outer current set 15
+bindsym $mod+Shift+t		gaps inner current set $inner; gaps outer current set $outer
 
 bindsym $mod+y			exec $term -e calcurse
 bindsym $mod+Shift+y		exec --no-startup-id i3resize left

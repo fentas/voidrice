@@ -1,0 +1,23 @@
+#!/bin/sh
+
+ids=(
+  "1111575" # space
+  "176"     # unsplash
+  "562095"  # Wilderness Artifacts
+  "164"     # Brevitē
+  "151749"  # Follow Me
+  "397770"  # Coffee House
+)
+
+# wait for internet
+until wget -q --spider "https://source.unsplash.com/"; do sleep 1; done
+
+IFS=$'\n'
+for screen in $(xrandr | grep -o 'Screen [0-9]*'); do
+  res="$(xrandr | grep "${screen}" | grep -oP 'current \K[0-9]+ x [0-9]+' | tr -d ' ')"
+  tmp="$(mktemp --suffix -wallpaper)"
+  col="${ids[ $RANDOM % ${#ids[@]} ]}"
+  curl -fsSLo "${tmp}" "https://source.unsplash.com/collection/${col}/${res}"
+  xwallpaper --screen "$(echo "${screen}" | grep -o '[0-9]*')" --stretch "${tmp}"
+done
+unset IFS
